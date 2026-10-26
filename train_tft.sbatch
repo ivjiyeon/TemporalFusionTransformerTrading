@@ -34,7 +34,7 @@ OUT_DIR="${OUT_DIR:-runs/tft_${SLURM_JOB_ID}}"
 nvidia-smi
 echo "Job $SLURM_JOB_ID on $(hostname) started $(date) -> $OUT_DIR"
 
-python train.py \
+python src/train.py \
     --csv_15m "${CSV_15M:-data/BTCUSDT_15m.csv}" \
     --csv_1h  "${CSV_1H:-data/BTCUSDT_1h.csv}" \
     --csv_4h  "${CSV_4H:-data/BTCUSDT_4h.csv}" \
