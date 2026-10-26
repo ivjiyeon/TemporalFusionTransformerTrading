@@ -37,8 +37,10 @@ src/
   check_leakage.py   Causality + timestamp-convention checks (run before training)
 ```
 
-The Python modules import each other as flat modules (`from data import ...`),
-so run the Python commands from inside `src/`.
+The Python modules import each other as flat modules (`from data import ...`).
+Run them from the repo root as `python src/train.py ...` — Python puts the
+script's own directory on the path, so the flat imports resolve — or from
+inside `src/` directly.
 
 ## Data
 
@@ -61,11 +63,10 @@ Before training, verify the timestamp convention (bar open vs close times)
 and that no feature uses future data:
 
 ```bash
-cd src
-python check_leakage.py \
-  --csv_15m ../data/BTCUSDT_15m.csv \
-  --csv_1h ../data/BTCUSDT_1h.csv \
-  --csv_4h ../data/BTCUSDT_4h.csv
+python src/check_leakage.py \
+  --csv_15m data/BTCUSDT_15m.csv \
+  --csv_1h data/BTCUSDT_1h.csv \
+  --csv_4h data/BTCUSDT_4h.csv
 ```
 
 This runs a causality test: features computed on data truncated at time T
@@ -75,12 +76,11 @@ non-zero on any mismatch.
 ## Train
 
 ```bash
-cd src
-python train.py \
-  --csv_15m ../data/BTCUSDT_15m.csv \
-  --csv_1h ../data/BTCUSDT_1h.csv \
-  --csv_4h ../data/BTCUSDT_4h.csv \
-  --out ../runs/tft
+python src/train.py \
+  --csv_15m data/BTCUSDT_15m.csv \
+  --csv_1h data/BTCUSDT_1h.csv \
+  --csv_4h data/BTCUSDT_4h.csv \
+  --out runs/tft
 ```
 
 Every setting in `config.py` is also a CLI flag (booleans as `--flag` /
