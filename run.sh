@@ -28,7 +28,8 @@ DATA_ARGS="--csv_15m $CSV_15M --csv_1h $CSV_1H --csv_4h $CSV_4H"
 # module purge && module load miniforge cuda   # CHECK `module avail`, then uncomment
 
 need_files() {
-    for f in train.py data.py features.py model.py loader.py signals.py backtest.py config.py \
+    for f in src/train.py src/data.py src/features.py src/model.py src/loader.py src/signals.py \
+             src/backtest.py src/config.py src/check_leakage.py \
              train_tft.sbatch requirements.txt; do
         [ -f "$f" ] || { echo "Missing $f in $(pwd)"; exit 1; }
     done
@@ -60,7 +61,7 @@ case "${1:-help}" in
     check)
         need_files; setup_env
         # shellcheck disable=SC2086
-        python check_leakage.py $DATA_ARGS ${TRAIN_ARGS:-}
+        python src/check_leakage.py $DATA_ARGS ${TRAIN_ARGS:-}
         ;;
     test)
         need_files; setup_env
@@ -69,7 +70,7 @@ case "${1:-help}" in
              --job-name="${JOB_NAME}_test" --pty bash -c "
                 source '$VENV/bin/activate' &&
                 nvidia-smi -L &&
-                python train.py $DATA_ARGS --out runs/smoke_test --epochs 2 ${TRAIN_ARGS:-}
+                python src/train.py $DATA_ARGS --out runs/smoke_test --epochs 2 ${TRAIN_ARGS:-}
              "
         ;;
     submit)
